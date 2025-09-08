@@ -1,11 +1,8 @@
 import os
 from flask import Flask, jsonify, request
-import psycopg2 # This is imported but the comment below says MySQL
+import psycopg2
 
-# --- DRIFT (Inline Comment) ---
-# This inline comment is outdated. The code uses psycopg2 for PostgreSQL,
-# but the comment explicitly states it connects to MySQL.
-# This can mislead developers during maintenance.
+
 # Connects to the MySQL database.
 def get_db_connection():
     """Establishes a connection to the database."""
@@ -17,10 +14,6 @@ def get_db_connection():
     )
     return conn
 
-# --- DRIFT (Project-Level Documentation) ---
-# The project's README.md and api_versioning_policy.md both state that all API
-# endpoints MUST be prefixed with `/api/v1/`. This implementation omits that prefix,
-# causing a drift from the project-wide standard.
 app = Flask(__name__)
 
 # Mock data for demonstration purposes if DB fails
@@ -123,9 +116,5 @@ def validate_product_data(data):
     return True
 
 if __name__ == '__main__':
-    # --- DRIFT (Organization-Level Documentation) ---
-    # The coding_standards.md states that variables should be camelCase.
-    # The variable `debug_mode` uses snake_case, which is common in Python
-    # but violates the organization's cross-language standard.
     debug_mode = os.environ.get("DEBUG_MODE", "True").lower() == "true"
     app.run(host='0.0.0.0', port=5001, debug=debug_mode)

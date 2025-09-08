@@ -77,10 +77,6 @@ resource function login(http:Caller caller, http:Request request) returns error?
     string token = generateMockJwt(foundUser[0].userId);
     log:printInfo("User authenticated successfully: " + credentials.email);
 
-    // *** DRIFT (API Documentation) ***
-    // The API documentation (user_service_spec.md) and project documentation
-    // (feature_specification.md) state that this endpoint should return BOTH an
-    // `accessToken` and a `refreshToken`. This implementation only returns the `accessToken`.
     AuthResponse authResponse = {accessToken: token};
 
     // Respond to the client with the token.
