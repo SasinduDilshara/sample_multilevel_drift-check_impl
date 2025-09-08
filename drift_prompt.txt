@@ -1,0 +1,258 @@
+# Multi-Level Documentation Drift Detection System
+
+## **Terminology**
+
+1. **Program**: The actual source code containing implementation and various levels of documentation.
+2. **Entity**: Function, component, class, variable, method, module, or any identifiable code construct in the program.
+3. **Implementation**: The executable code portion of an entity, excluding any documentation.
+4. **Inline Comments**: Single-line or block comments within the code (e.g., `//`, `/**/`, `#`, `--`) that explain implementation details.
+5. **API Documentation**: Formal documentation comments following language-specific conventions (e.g., `/** */` in Java/Kotlin, `///` in Rust, `"""` in Python docstrings, `#` in Ballerina).
+6. **Project-Level Documentation**: Documentation that describes the entire project (e.g., README.md, requirements specifications, project overview files).
+7. **Component-Level Documentation**: Documentation that describes specific modules, packages, or major components within the project.
+8. **Organization-Level Documentation**: High-level documentation that describes architectural decisions, coding standards, best practices, and organizational policies.
+9. **Documentation Priority**: The hierarchical importance of documentation levels, where higher priority documentation takes precedence in case of conflicts.
+10. **Synchronized**: When code implementation aligns perfectly with the documentation at all relevant levels.
+11. **Drift**: Discrepancy between code implementation and any level of documentation.
+
+---
+
+## **Documentation Priority Hierarchy**
+
+The system follows this priority order (highest to lowest):
+
+1. **Organization-Level Documentation** (Highest Priority)
+   - Architectural guidelines, coding standards, organizational policies
+2. **Project-Level Documentation** 
+   - Requirements, README, project specifications
+3. **Component-Level Documentation**
+   - Module/package documentation, component specifications
+4. **API Documentation**
+   - Formal code documentation (docstrings, javadocs, etc.)
+5. **Inline Comments** (Lowest Priority)
+   - Implementation-level comments within code
+
+**Conflict Resolution**: When documentation conflicts exist across levels, higher priority documentation takes precedence. The system should flag conflicts between documentation levels as separate issues.
+
+---
+
+## **Programming Language Support**
+
+The system automatically detects and handles documentation conventions for any programming language by:
+
+### **Dynamic Language Detection**
+- Identify language from file extensions and syntax patterns
+- Automatically determine documentation conventions:
+  - **Java/Kotlin**: `/** */`, `//`
+  - **Python**: `"""` docstrings, `#`
+  - **JavaScript/TypeScript**: `/** */`, `//`
+  - **Rust**: `///`, `//!`, `//`
+  - **Go**: `//` (preceding declarations), `//`
+  - **C#**: `/// <summary>`, `//`
+  - **Ruby**: `=begin =end`, `#`
+  - **PHP**: `/** */`, `//`, `#`
+  - **Swift**: `/// `, `//`
+  - **Ballerina**: `#`, `//`
+  - **And any other language**: Pattern-based detection
+
+### **Universal Comment Pattern Detection**
+- Single-line comments: `//`, `#`, `--`, `;`, `'`, etc.
+- Multi-line comments: `/* */`, `<!-- -->`, `=begin =end`, etc.
+- Documentation comments: Language-specific formal documentation syntax
+
+---
+
+## **Objective**
+
+As an expert software engineer, analyze source code and detect drift between implementation and documentation across all levels. Identify inconsistencies, missing documentation, outdated information, and conflicts between documentation priorities.
+
+---
+
+## **Input Structure**
+
+```xml
+<analysis_context>
+  <organization_docs>{{ORGANIZATION_DOCUMENTATION}}</organization_docs>
+  <project_docs>{{PROJECT_DOCUMENTATION}}</project_docs>
+  <component_docs>{{COMPONENT_DOCUMENTATION}}</component_docs>
+  <source_files>{{SOURCE_FILES}}</source_files>
+</analysis_context>
+```
+
+---
+
+## **Analysis Steps**
+
+### **1. Context Analysis**
+- Parse and understand organization-level documentation (policies, standards, architectural guidelines)
+- Parse and understand project-level documentation (requirements, README, specifications)
+- Parse and understand component-level documentation (module docs, package descriptions)
+- Establish documentation hierarchy and identify potential conflicts between levels
+
+### **2. Source Code Analysis**
+For each `<file>` in `<source_files>`:
+- **Language Detection**: Automatically identify programming language and documentation conventions
+- **Entity Identification**: Identify all code entities (functions, classes, variables, modules, etc.)
+- **Documentation Extraction**: Extract all documentation types:
+  - Inline comments within entities
+  - API documentation (formal documentation comments)
+  - File-level documentation
+  - Module-level documentation
+
+### **3. Multi-Level Drift Detection**
+
+For each entity, analyze drift across all documentation levels:
+
+#### **3.1 Organization-Level Drift**
+- Verify code follows organizational coding standards
+- Check compliance with architectural guidelines
+- Validate adherence to organizational policies
+- Identify violations of best practices
+
+#### **3.2 Project-Level Drift**
+- Verify implementation matches project requirements
+- Check alignment with README specifications
+- Validate feature completeness against project documentation
+- Identify missing or incorrectly implemented project features
+
+#### **3.3 Component-Level Drift**
+- Verify entity behavior matches component documentation
+- Check module interface compliance
+- Validate component interaction patterns
+- Identify component responsibility mismatches
+
+#### **3.4 API Documentation Drift**
+- Compare formal documentation with actual implementation
+- Check parameter descriptions, return types, exceptions
+- Validate usage examples and behavior descriptions
+- Identify outdated or incorrect API documentation
+
+#### **3.5 Inline Comment Drift**
+- Verify inline comments accurately describe implementation
+- Check for outdated or misleading comments
+- Identify missing explanatory comments for complex logic
+- Validate comment consistency with actual code behavior
+
+### **4. Priority-Based Conflict Resolution**
+- When multiple documentation levels conflict, flag as separate issues
+- Apply priority hierarchy for recommendations
+- Identify documentation inconsistencies across levels
+- Suggest resolution based on priority order
+
+### **5. Intelligent Categorization**
+Categorize each drift issue by:
+- **Severity**: Critical, Major, Minor
+- **Type**: Missing, Outdated, Incorrect, Conflicting
+- **Documentation Level**: Organization, Project, Component, API, Inline
+- **Impact**: Functional, Non-functional, Usability, Maintainability
+
+---
+
+## **Response Generation**
+
+For each detected drift, generate a response object:
+
+```json
+{
+  "id": "unique_issue_identifier",
+  "severity": "Critical|Major|Minor",
+  "type": "Missing|Outdated|Incorrect|Conflicting",
+  "documentationLevel": "Organization|Project|Component|API|Inline",
+  "impact": "Functional|Non-functional|Usability|Maintainability",
+  "cause": "Detailed description of the drift and why it occurred",
+  "fileName": "source_file_name",
+  "entityName": "affected_entity_name",
+  "entityType": "function|class|variable|module|etc",
+  "lineRange": {
+    "start": "start_line_number",
+    "end": "end_line_number"
+  },
+  "conflictingDocumentation": {
+    "levels": ["array_of_conflicting_doc_levels"],
+    "descriptions": ["array_of_conflicting_descriptions"]
+  },
+  "recommendedAction": "Suggested action based on priority hierarchy",
+  "relatedDocuments": ["list_of_related_documentation_files"]
+}
+```
+
+---
+
+## **Validation Rules**
+
+1. **Language Agnostic**: Must work across all programming languages
+2. **Priority Respect**: Higher priority documentation takes precedence
+3. **Comprehensive Coverage**: Analyze all documentation levels
+4. **Conflict Detection**: Identify inter-documentation conflicts
+5. **Actionable Results**: Provide clear, prioritized recommendations
+6. **No Implementation Changes**: Focus only on drift detection, not code fixes
+
+---
+
+## **Output Format**
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "summary": {
+      "type": "object",
+      "properties": {
+        "totalIssues": {"type": "integer"},
+        "criticalIssues": {"type": "integer"},
+        "majorIssues": {"type": "integer"},
+        "minorIssues": {"type": "integer"},
+        "languagesAnalyzed": {"type": "array", "items": {"type": "string"}},
+        "documentationLevelsCovered": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string"},
+          "severity": {"type": "string", "enum": ["Critical", "Major", "Minor"]},
+          "type": {"type": "string", "enum": ["Missing", "Outdated", "Incorrect", "Conflicting"]},
+          "documentationLevel": {"type": "string", "enum": ["Organization", "Project", "Component", "API", "Inline"]},
+          "impact": {"type": "string", "enum": ["Functional", "Non-functional", "Usability", "Maintainability"]},
+          "cause": {"type": "string"},
+          "fileName": {"type": "string"},
+          "entityName": {"type": "string"},
+          "entityType": {"type": "string"},
+          "lineRange": {
+            "type": "object",
+            "properties": {
+              "start": {"type": "integer"},
+              "end": {"type": "integer"}
+            }
+          },
+          "conflictingDocumentation": {
+            "type": "object",
+            "properties": {
+              "levels": {"type": "array", "items": {"type": "string"}},
+              "descriptions": {"type": "array", "items": {"type": "string"}}
+            }
+          },
+          "recommendedAction": {"type": "string"},
+          "relatedDocuments": {"type": "array", "items": {"type": "string"}}
+        },
+        "required": ["id", "severity", "type", "documentationLevel", "impact", "cause", "fileName"]
+      }
+    }
+  },
+  "required": ["summary", "results"]
+}
+```
+
+---
+
+## **Key Features**
+
+1. **Multi-Language Intelligence**: Automatically adapts to any programming language
+2. **Hierarchical Priority**: Respects documentation priority levels
+3. **Comprehensive Analysis**: Covers all documentation types
+4. **Conflict Resolution**: Intelligently handles documentation conflicts
+5. **Actionable Insights**: Provides prioritized, actionable recommendations
+6. **Scalable Architecture**: Works across projects of any size
+7. **Context Awareness**: Understands organizational and project context
