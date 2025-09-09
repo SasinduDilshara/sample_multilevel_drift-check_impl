@@ -1,258 +1,108 @@
-# Multi-Level Documentation Drift Detection System
+Of course. I've updated your prompt to produce a descriptive, paragraph-based report, removed the organization-level documentation as requested, and tailored the instructions to generate an output similar to your provided sample.
 
-## **Terminology**
+Here is the revised prompt:
 
-1. **Program**: The actual source code containing implementation and various levels of documentation.
-2. **Entity**: Function, component, class, variable, method, module, or any identifiable code construct in the program.
-3. **Implementation**: The executable code portion of an entity, excluding any documentation.
-4. **Inline Comments**: Single-line or block comments within the code (e.g., `//`, `/**/`, `#`, `--`) that explain implementation details.
-5. **API Documentation**: Formal documentation comments following language-specific conventions (e.g., `/** */` in Java/Kotlin, `///` in Rust, `"""` in Python docstrings, `#` in Ballerina).
-6. **Project-Level Documentation**: Documentation that describes the entire project (e.g., README.md, requirements specifications, project overview files).
-7. **Component-Level Documentation**: Documentation that describes specific modules, packages, or major components within the project.
-8. **Organization-Level Documentation**: High-level documentation that describes architectural decisions, coding standards, best practices, and organizational policies.
-9. **Documentation Priority**: The hierarchical importance of documentation levels, where higher priority documentation takes precedence in case of conflicts.
-10. **Synchronized**: When code implementation aligns perfectly with the documentation at all relevant levels.
-11. **Drift**: Discrepancy between code implementation and any level of documentation.
+-----
 
----
-
-## **Documentation Priority Hierarchy**
-
-The system follows this priority order (highest to lowest):
-
-1. **Organization-Level Documentation** (Highest Priority)
-   - Architectural guidelines, coding standards, organizational policies
-2. **Project-Level Documentation** 
-   - Requirements, README, project specifications
-3. **Component-Level Documentation**
-   - Module/package documentation, component specifications
-4. **API Documentation**
-   - Formal code documentation (docstrings, javadocs, etc.)
-5. **Inline Comments** (Lowest Priority)
-   - Implementation-level comments within code
-
-**Conflict Resolution**: When documentation conflicts exist across levels, higher priority documentation takes precedence. The system should flag conflicts between documentation levels as separate issues.
-
----
-
-## **Programming Language Support**
-
-The system automatically detects and handles documentation conventions for any programming language by:
-
-### **Dynamic Language Detection**
-- Identify language from file extensions and syntax patterns
-- Automatically determine documentation conventions:
-  - **Java/Kotlin**: `/** */`, `//`
-  - **Python**: `"""` docstrings, `#`
-  - **JavaScript/TypeScript**: `/** */`, `//`
-  - **Rust**: `///`, `//!`, `//`
-  - **Go**: `//` (preceding declarations), `//`
-  - **C#**: `/// <summary>`, `//`
-  - **Ruby**: `=begin =end`, `#`
-  - **PHP**: `/** */`, `//`, `#`
-  - **Swift**: `/// `, `//`
-  - **Ballerina**: `#`, `//`
-  - **And any other language**: Pattern-based detection
-
-### **Universal Comment Pattern Detection**
-- Single-line comments: `//`, `#`, `--`, `;`, `'`, etc.
-- Multi-line comments: `/* */`, `<!-- -->`, `=begin =end`, etc.
-- Documentation comments: Language-specific formal documentation syntax
-
----
+# Multi-Level Documentation Drift Analysis and Reporting
 
 ## **Objective**
 
-As an expert software engineer, analyze source code and detect drift between implementation and documentation across all levels. Identify inconsistencies, missing documentation, outdated information, and conflicts between documentation priorities.
+As an expert software engineer, your task is to analyze a given codebase to detect "documentation drift"—discrepancies between the implementation and its corresponding documentation. You will examine multiple levels of documentation, from high-level project and component guides down to inline code comments. Based on this analysis, you will generate a clear, descriptive, and insightful report written in prose. This report should summarize the overall health of the project's documentation and detail specific issues within its components, providing actionable feedback in a narrative format.
 
----
+-----
+
+## **Core Concepts**
+
+### **Terminology**
+
+1.  **Program**: The actual source code containing the implementation and its documentation.
+2.  **Entity**: Any identifiable code construct, such as a function, class, method, module, or component.
+3.  **Implementation**: The executable logic of an entity, separate from any comments or documentation.
+4.  **Project-Level Documentation**: High-level documents that describe the entire project, such as `README.md` files, requirements specifications, and architectural overviews.
+5.  **Component-Level Documentation**: Documents that describe specific modules, packages, or major features within the project.
+6.  **API Documentation**: Formal documentation generated from code comments that follow language-specific conventions (e.g., Javadoc `/** */`, Python docstrings `"""`, Rust `///`).
+7.  **Inline Comments**: Comments written directly within the code logic to explain implementation details (e.g., `//`, `#`).
+8.  **Drift**: A mismatch or inconsistency between the code's implementation and any level of its documentation.
+
+### **Documentation Priority Hierarchy**
+
+When conflicts arise between different levels of documentation, the system will prioritize them in the following order (from highest to lowest):
+
+1.  **Project-Level Documentation** (Highest Priority)
+2.  **Component-Level Documentation**
+3.  **API Documentation**
+4.  **Inline Comments** (Lowest Priority)
+
+Conflicts between these levels should be noted in the analysis.
+
+-----
 
 ## **Input Structure**
 
+You will receive the project context in the following structure:
+
 ```xml
 <analysis_context>
-  <organization_docs>{{ORGANIZATION_DOCUMENTATION}}</organization_docs>
   <project_docs>{{PROJECT_DOCUMENTATION}}</project_docs>
   <component_docs>{{COMPONENT_DOCUMENTATION}}</component_docs>
   <source_files>{{SOURCE_FILES}}</source_files>
 </analysis_context>
 ```
 
----
+-----
 
-## **Analysis Steps**
+## **Analysis Process (Internal Steps)**
+
+You will perform the following analysis internally to gather the insights needed for the final report.
 
 ### **1. Context Analysis**
-- Parse and understand organization-level documentation (policies, standards, architectural guidelines)
-- Parse and understand project-level documentation (requirements, README, specifications)
-- Parse and understand component-level documentation (module docs, package descriptions)
-- Establish documentation hierarchy and identify potential conflicts between levels
+
+  * Parse and comprehend the **project-level documentation** (requirements, READMEs) to understand the project's goals and specifications.
+  * Parse and comprehend the **component-level documentation** to understand the intended purpose and design of individual modules.
+  * Establish the documentation hierarchy and identify any high-level conflicts between project and component docs.
 
 ### **2. Source Code Analysis**
-For each `<file>` in `<source_files>`:
-- **Language Detection**: Automatically identify programming language and documentation conventions
-- **Entity Identification**: Identify all code entities (functions, classes, variables, modules, etc.)
-- **Documentation Extraction**: Extract all documentation types:
-  - Inline comments within entities
-  - API documentation (formal documentation comments)
-  - File-level documentation
-  - Module-level documentation
+
+  * For each source file, automatically detect the programming language and its specific documentation conventions (e.g., `/** */` vs. `"""`).
+  * Identify all code entities (functions, classes, etc.) and extract their associated documentation (API docs and inline comments).
 
 ### **3. Multi-Level Drift Detection**
 
-For each entity, analyze drift across all documentation levels:
+  * For each code entity, systematically compare its implementation against all relevant documentation layers to identify drift.
+      * **Project-Level Drift**: Does the implemented feature align with the project's `README` and requirements?
+      * **Component-Level Drift**: Does the entity's behavior match the description in its component documentation?
+      * **API Documentation Drift**: Are the parameters, return values, and described behavior in the API docs accurate?
+      * **Inline Comment Drift**: Do the inline comments correctly reflect the logic they are intended to explain?
 
-#### **3.1 Organization-Level Drift**
-- Verify code follows organizational coding standards
-- Check compliance with architectural guidelines
-- Validate adherence to organizational policies
-- Identify violations of best practices
+### **4. Intelligent Categorization**
 
-#### **3.2 Project-Level Drift**
-- Verify implementation matches project requirements
-- Check alignment with README specifications
-- Validate feature completeness against project documentation
-- Identify missing or incorrectly implemented project features
+  * Internally categorize each detected issue by its **severity** (Critical, Major, Minor), **type** (Missing, Outdated, Incorrect, Conflicting), and the **documentation level** it occurred at. This categorization will inform the tone and focus of the final report.
 
-#### **3.3 Component-Level Drift**
-- Verify entity behavior matches component documentation
-- Check module interface compliance
-- Validate component interaction patterns
-- Identify component responsibility mismatches
+-----
 
-#### **3.4 API Documentation Drift**
-- Compare formal documentation with actual implementation
-- Check parameter descriptions, return types, exceptions
-- Validate usage examples and behavior descriptions
-- Identify outdated or incorrect API documentation
+## **Output Generation Guidelines**
 
-#### **3.5 Inline Comment Drift**
-- Verify inline comments accurately describe implementation
-- Check for outdated or misleading comments
-- Identify missing explanatory comments for complex logic
-- Validate comment consistency with actual code behavior
+Generate a comprehensive report in markdown format. The report must be structured as a set of descriptive, rich-content paragraphs, using the sample provided as a stylistic guide.
 
-### **4. Priority-Based Conflict Resolution**
-- When multiple documentation levels conflict, flag as separate issues
-- Apply priority hierarchy for recommendations
-- Identify documentation inconsistencies across levels
-- Suggest resolution based on priority order
+### **1. Main Project Summary**
 
-### **5. Intelligent Categorization**
-Categorize each drift issue by:
-- **Severity**: Critical, Major, Minor
-- **Type**: Missing, Outdated, Incorrect, Conflicting
-- **Documentation Level**: Organization, Project, Component, API, Inline
-- **Impact**: Functional, Non-functional, Usability, Maintainability
+  * Begin the report with a primary heading, such as `### Project Summary`.
+  * In this section, provide a holistic overview of the project's documentation health.
+  * Assign an overall rating (e.g., **"Good"**, **"Fair"**, **"Needs Improvement"**) and state it clearly.
+  * Summarize the key findings, highlighting both strengths (e.g., "sound resource modeling," "secure authentication") and critical deficiencies (e.g., "lack of standardized error objects," "omission of recommended REST headers").
+  * Conclude with a statement on the overall impact and suggest a course of action.
 
----
+### **2. Detailed Component Analysis**
 
-## **Response Generation**
+  * Follow the summary with a clear separator (`***`) and a new section with a heading like `### Component Analysis` or `### API Endpoint Analysis`.
+  * For each major component, endpoint, or file analyzed, create a dedicated sub-heading (e.g., `**MyService - REST Endpoint**`).
+  * Under each sub-heading, write a detailed paragraph describing the findings for that specific component.
+  * Include its individual rating (e.g., "rated **'Fair'**") and explain the reasoning.
+  * Describe what the component does well (e.g., "adheres to most RESTful principles") and detail the specific documentation drift issues found (e.g., "lacks explicit versioning," "omits important response headers," "documentation is missing contact and support information").
 
-For each detected drift, generate a response object:
+### **3. Tone and Style**
 
-```json
-{
-  "id": "unique_issue_identifier",
-  "severity": "Critical|Major|Minor",
-  "type": "Missing|Outdated|Incorrect|Conflicting",
-  "documentationLevel": "Organization|Project|Component|API|Inline",
-  "impact": "Functional|Non-functional|Usability|Maintainability",
-  "cause": "Detailed description of the drift and why it occurred",
-  "fileName": "source_file_name",
-  "entityName": "affected_entity_name",
-  "entityType": "function|class|variable|module|etc",
-  "lineRange": {
-    "start": "start_line_number",
-    "end": "end_line_number"
-  },
-  "conflictingDocumentation": {
-    "levels": ["array_of_conflicting_doc_levels"],
-    "descriptions": ["array_of_conflicting_descriptions"]
-  },
-  "recommendedAction": "Suggested action based on priority hierarchy",
-  "relatedDocuments": ["list_of_related_documentation_files"]
-}
-```
-
----
-
-## **Validation Rules**
-
-1. **Language Agnostic**: Must work across all programming languages
-2. **Priority Respect**: Higher priority documentation takes precedence
-3. **Comprehensive Coverage**: Analyze all documentation levels
-4. **Conflict Detection**: Identify inter-documentation conflicts
-5. **Actionable Results**: Provide clear, prioritized recommendations
-6. **No Implementation Changes**: Focus only on drift detection, not code fixes
-
----
-
-## **Output Format**
-
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "type": "object",
-  "properties": {
-    "summary": {
-      "type": "object",
-      "properties": {
-        "totalIssues": {"type": "integer"},
-        "criticalIssues": {"type": "integer"},
-        "majorIssues": {"type": "integer"},
-        "minorIssues": {"type": "integer"},
-        "languagesAnalyzed": {"type": "array", "items": {"type": "string"}},
-        "documentationLevelsCovered": {"type": "array", "items": {"type": "string"}}
-      }
-    },
-    "results": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "id": {"type": "string"},
-          "severity": {"type": "string", "enum": ["Critical", "Major", "Minor"]},
-          "type": {"type": "string", "enum": ["Missing", "Outdated", "Incorrect", "Conflicting"]},
-          "documentationLevel": {"type": "string", "enum": ["Organization", "Project", "Component", "API", "Inline"]},
-          "impact": {"type": "string", "enum": ["Functional", "Non-functional", "Usability", "Maintainability"]},
-          "cause": {"type": "string"},
-          "fileName": {"type": "string"},
-          "entityName": {"type": "string"},
-          "entityType": {"type": "string"},
-          "lineRange": {
-            "type": "object",
-            "properties": {
-              "start": {"type": "integer"},
-              "end": {"type": "integer"}
-            }
-          },
-          "conflictingDocumentation": {
-            "type": "object",
-            "properties": {
-              "levels": {"type": "array", "items": {"type": "string"}},
-              "descriptions": {"type": "array", "items": {"type": "string"}}
-            }
-          },
-          "recommendedAction": {"type": "string"},
-          "relatedDocuments": {"type": "array", "items": {"type": "string"}}
-        },
-        "required": ["id", "severity", "type", "documentationLevel", "impact", "cause", "fileName"]
-      }
-    }
-  },
-  "required": ["summary", "results"]
-}
-```
-
----
-
-## **Key Features**
-
-1. **Multi-Language Intelligence**: Automatically adapts to any programming language
-2. **Hierarchical Priority**: Respects documentation priority levels
-3. **Comprehensive Analysis**: Covers all documentation types
-4. **Conflict Resolution**: Intelligently handles documentation conflicts
-5. **Actionable Insights**: Provides prioritized, actionable recommendations
-6. **Scalable Architecture**: Works across projects of any size
-7. **Context Awareness**: Understands organizational and project context
+  * Write in a professional, clear, and constructive tone.
+  * Use **bold formatting** to emphasize key terms, ratings, and important findings.
+  * Ensure the final output is a coherent narrative, not a list of raw data points. The goal is to produce a human-readable report that provides actionable insights.
