@@ -1,7 +1,3 @@
-Of course. I've updated your prompt to produce a descriptive, paragraph-based report, removed the organization-level documentation as requested, and tailored the instructions to generate an output similar to your provided sample.
-
-Here is the revised prompt:
-
 -----
 
 # Multi-Level Documentation Drift Analysis and Reporting
@@ -77,32 +73,33 @@ You will perform the following analysis internally to gather the insights needed
 
 ### **4. Intelligent Categorization**
 
-  * Internally categorize each detected issue by its **severity** (Critical, Major, Minor), **type** (Missing, Outdated, Incorrect, Conflicting), and the **documentation level** it occurred at. This categorization will inform the tone and focus of the final report.
+* Internally categorize each detected issue by its **severity** (Critical, Major, Minor), **type** (Missing, Outdated, Incorrect, Conflicting), and the **documentation level** it occurred at. This categorization will inform the tone and focus of the final report.
 
 -----
 
 ## **Output Generation Guidelines**
 
-Generate a comprehensive report in markdown format. The report must be structured as a set of descriptive, rich-content paragraphs, using the sample provided as a stylistic guide.
+Generate a comprehensive report in markdown format. The report must be structured as a clear, scannable list of documentation drift issues.
 
 ### **1. Main Project Summary**
 
-  * Begin the report with a primary heading, such as `### Project Summary`.
-  * In this section, provide a holistic overview of the project's documentation health.
-  * Assign an overall rating (e.g., **"Good"**, **"Fair"**, **"Needs Improvement"**) and state it clearly.
-  * Summarize the key findings, highlighting both strengths (e.g., "sound resource modeling," "secure authentication") and critical deficiencies (e.g., "lack of standardized error objects," "omission of recommended REST headers").
-  * Conclude with a statement on the overall impact and suggest a course of action.
+* Begin the report with a primary heading: `### Project Summary`.
+* Assign an overall rating for the project's documentation health (e.g., **"Fair"**, **"Needs Improvement"**).
+* Under the heading, create a bulleted list highlighting the most critical, project-wide documentation drifts.
+* Each bullet point should be a short sentence that clearly identifies a systemic issue.
+* Conclude with a brief statement on the overall impact of the identified drifts and the recommended course of action.
 
 ### **2. Detailed Component Analysis**
 
-  * Follow the summary with a clear separator (`***`) and a new section with a heading like `### Component Analysis` or `### API Endpoint Analysis`.
-  * For each major component, endpoint, or file analyzed, create a dedicated sub-heading (e.g., `**MyService - REST Endpoint**`).
-  * Under each sub-heading, write a detailed paragraph describing the findings for that specific component.
-  * Include its individual rating (e.g., "rated **'Fair'**") and explain the reasoning.
-  * Describe what the component does well (e.g., "adheres to most RESTful principles") and detail the specific documentation drift issues found (e.g., "lacks explicit versioning," "omits important response headers," "documentation is missing contact and support information").
+* Follow the summary with a clear separator (`***`) and a new section with the heading `### Component Analysis`.
+* For each component, endpoint, or file analyzed, create a dedicated sub-heading that includes its name and an individual rating (e.g., `**MyService - REST Endpoint (Fair)**`).
+* Under each sub-heading, create a bulleted list of all specific documentation drifts found within that component.
+* Each bullet point must be a short, direct sentence describing a single, actionable issue.
+    * *Example: API documentation for the `createUser` function is missing a description for the `role` parameter.*
+    * *Example: An inline comment on line 42 incorrectly describes the error handling logic.*
 
 ### **3. Tone and Style**
 
-  * Write in a professional, clear, and constructive tone.
-  * Use **bold formatting** to emphasize key terms, ratings, and important findings.
-  * Ensure the final output is a coherent narrative, not a list of raw data points. The goal is to produce a human-readable report that provides actionable insights.
+* Write in a professional, clear, and direct tone.
+* Use **bold formatting** to emphasize component names, ratings, and key terms within the issues.
+* The final output must be a clear and scannable list of actionable issues, focusing only on the identified drifts.

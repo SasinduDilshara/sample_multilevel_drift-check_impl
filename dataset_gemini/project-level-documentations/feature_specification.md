@@ -1,4 +1,4 @@
-# Gemini Commerce - Core Feature Specifications
+# E commerce - Core Feature Specifications
 
 This document outlines the core features of the platform.
 

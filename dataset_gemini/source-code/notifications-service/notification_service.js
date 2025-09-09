@@ -46,7 +46,7 @@ app.post('/api/v1/send-confirmation', async (req, res) => {
         return res.status(400).json({ error: 'Missing required fields: email, orderId, totalAmount, items' });
     }
 
-    const subject = `Your Gemini Commerce Order Confirmation #${orderId}`;
+    const subject = `Your E commerce Order Confirmation #${orderId}`;
     const body = `<h1>Thank you for your order!</h1>
                   <p>Your order #${orderId} for a total of $${totalAmount} has been received.</p>
                   <p>We will notify you again once your items have shipped.</p>`;

@@ -1,6 +1,6 @@
-# Gemini Commerce Platform
+# E commerce Platform
 
-Welcome to the Gemini Commerce Platform, a modern, microservices-based e-commerce solution.
+Welcome to the E commerce Platform, a modern, microservices-based e-commerce solution.
 
 ## Overview
 
