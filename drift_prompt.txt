@@ -4,7 +4,10 @@
 
 ## **Objective**
 
-As an expert software engineer, your task is to analyze a given codebase to detect "documentation drift"—discrepancies between the implementation and its corresponding documentation. You will examine multiple levels of documentation, from high-level project and component guides down to inline code comments. Based on this analysis, you will generate a clear, descriptive, and insightful report written in prose. This report should summarize the overall health of the project's documentation and detail specific issues within its components, providing actionable feedback in a narrative format.
+As an expert software engineer, your task is to analyze a given codebase to detect "documentation drift"—discrepancies between the implementation and its corresponding documentation. 
+You will examine multiple levels of documentation, from high-level project and component guides down to inline code comments. 
+Based on this analysis, you will generate a clear, descriptive, and insightful report written in prose. 
+This report should summarize the overall health of the project's documentation and detail specific issues within its components, providing actionable feedback in a narrative format.
 
 -----
 
@@ -77,29 +80,39 @@ You will perform the following analysis internally to gather the insights needed
 
 -----
 
+## **Reporting and Filtering Criteria**
+
+The analysis should identify all types of drift, but the final report must adhere to the following criteria:
+
+* **Focus on Incorrectness, Not Absence**: The report must focus on documentation that **exists but is incorrect, outdated, or conflicting** with the source code implementation.
+* **Exclude Missing Documentation**: Explicitly **exclude** all drifts related to missing documentation. Do not report on functions, parameters, classes, or logic that are simply undocumented.
+---
+
 ## **Output Generation Guidelines**
 
-Generate a comprehensive report in markdown format. The report must be structured as a clear, scannable list of documentation drift issues.
+Generate a comprehensive report in markdown format based on the filtered results. The report must be structured as a clear, scannable list of documentation drift issues, incorporating a percentage-based match score.
 
 ### **1. Main Project Summary**
 
-* Begin the report with a primary heading: `### Project Summary`.
-* Assign an overall rating for the project's documentation health (e.g., **"Fair"**, **"Needs Improvement"**).
-* Under the heading, create a bulleted list highlighting the most critical, project-wide documentation drifts.
-* Each bullet point should be a short sentence that clearly identifies a systemic issue.
-* Conclude with a brief statement on the overall impact of the identified drifts and the recommended course of action.
+* Begin the report with a primary heading that includes an overall score, such as `### Project Summary (Overall Match: 85%)`.
+* Under the heading, provide a concise, 1-2 sentence summary that describes the overall nature of the documentation drift found in the project. This summary should not list component-specific issues.
+    * *Example: The project primarily suffers from drift where API documentation parameters are outdated following recent code refactoring, and inline comments do not accurately reflect updated business logic.*
+* The project summary **should not** exceed 2 sentences
+* Conclude with a brief statement on the overall impact of these drifts and the recommended course of action.
 
 ### **2. Detailed Component Analysis**
 
 * Follow the summary with a clear separator (`***`) and a new section with the heading `### Component Analysis`.
-* For each component, endpoint, or file analyzed, create a dedicated sub-heading that includes its name and an individual rating (e.g., `**MyService - REST Endpoint (Fair)**`).
-* Under each sub-heading, create a bulleted list of all specific documentation drifts found within that component.
+* For each component, endpoint, or file analyzed, create a dedicated sub-heading that includes its name and its specific **Documentation Match Score**.
+    * *Example: `**Product Service - (75% Match with the documentation)**`*
+    * *Example: `**Authentication Module - (95% Match with the documentation)**`*
+* Under each sub-heading, create a bulleted list of all specific documentation drifts found within that component (respecting the filtering criteria above).
 * Each bullet point must be a short, direct sentence describing a single, actionable issue.
-    * *Example: API documentation for the `createUser` function is missing a description for the `role` parameter.*
     * *Example: An inline comment on line 42 incorrectly describes the error handling logic.*
+    * *Example: The API documentation for the `updateUser` function incorrectly states it returns a boolean, but the implementation returns a user object.*
 
 ### **3. Tone and Style**
 
 * Write in a professional, clear, and direct tone.
-* Use **bold formatting** to emphasize component names, ratings, and key terms within the issues.
-* The final output must be a clear and scannable list of actionable issues, focusing only on the identified drifts.
+* Use **bold formatting** to emphasize component names, scores, and key terms within the issues.
+* **Exclusive Focus on Drifts**: The report must **only** contain identified issues. Do not include any positive comments, praise for well-documented code, or mentions of components that are correctly implemented. The output should exclusively be a list of problems.

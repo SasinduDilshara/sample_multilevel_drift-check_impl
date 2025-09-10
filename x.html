@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation Drift Analysis Report</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #f8f9fa;
+            --bg-sidebar: #1a2035;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #e2e8f0;
+            --text-active: #ffffff;
+            --border-color: #e2e8f0;
+            --accent-blue: #2563eb;
+            --accent-blue-light: #303a5b;
+            --accent-red: #dc2626;
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg-sidebar);
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--accent-blue-light);
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--text-active);
+            margin-right: 1rem;
+        }
+        
+        .org-select {
+            background-color: var(--accent-blue-light);
+            border: 1px solid var(--accent-blue-light);
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            color: var(--text-light);
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        
+        .org-select svg {
+            margin-left: 0.5rem;
+            width: 12px;
+            height: 12px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            margin-top: 1rem;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            margin-bottom: 0.25rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            color: #a0aec0;
+        }
+        
+        .nav-item svg {
+            margin-right: 0.75rem;
+            width: 20px;
+            height: 20px;
+        }
+
+        .nav-item.active,
+        .nav-item:hover {
+            background-color: var(--accent-blue-light);
+            color: var(--text-active);
+        }
+        
+        .nav-item.active {
+            font-weight: 600;
+        }
+
+        .sidebar-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--accent-blue-light);
+        }
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+        
+        .breadcrumbs {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .breadcrumbs span {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #bfdbfe;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .content-area {
+            padding: 2rem;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+        
+        .analysis-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+        
+        .card-header h3 {
+             font-size: 1.125rem;
+             font-weight: 600;
+             flex-grow: 1;
+             margin-top: 0.5rem;
+        }
+        
+        .card-body {
+            padding: 0 1.5rem 1.5rem 1.5rem;
+        }
+        
+        .card-body p {
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+        
+        .drift-list {
+            list-style: none;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .drift-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .drift-item:last-child {
+            border-bottom: none;
+        }
+
+        .drift-item .icon {
+            flex-shrink: 0;
+            color: var(--accent-red);
+        }
+        
+        .progress-circle {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: conic-gradient(var(--accent-blue) calc(var(--p)*1%), #e0e0e0 0);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            flex-shrink: 0;
+            position: relative;
+        }
+        
+        .progress-circle::before {
+             content: "";
+             position: absolute;
+             inset: 5px;
+             background: var(--bg-card);
+             border-radius: 50%;
+        }
+        
+        .progress-circle span {
+            position: relative;
+        }
+        
+        .low-match {
+            background: conic-gradient(#ef4444 calc(var(--p)*1%), #e0e0e0 0);
+            color: #ef4444;
+        }
+        .mid-match {
+            background: conic-gradient(#f97316 calc(var(--p)*1%), #e0e0e0 0);
+            color: #f97316;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <span class="logo">Choreo</span>
+        </div>
+        
+        <div class="org-select">
+            AI-Team
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1V10a1 1 0 00-1-1H7a1 1 0 00-1 1v10a1 1 0 001 1h2z"></path></svg>
+                Overview
+            </li>
+            <li class="nav-item">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                Infrastructure
+            </li>
+            <li class="nav-item">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21a6 6 0 00-9-5.197M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                User Management
+            </li>
+            <li class="nav-item">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
+                DevOps
+            </li>
+            <li class="nav-item">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                Governance
+            </li>
+            <li class="nav-item active">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V7a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                Compliance
+            </li>
+            </ul>
+        <div class="sidebar-footer">
+            <div class="nav-item">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Collapse
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="top-bar">
+            <div class="breadcrumbs">
+                Project &nbsp; / &nbsp; <span>Cost Optimization Demo Project</span>
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar">C</div>
+            </div>
+        </header>
+
+        <div class="content-area">
+            <h1>Documentation Drift Analysis Report</h1>
+
+            <div class="analysis-card">
+                <div class="card-header">
+                    <div class="progress-circle mid-match" style="--p:72"><span>72%</span></div>
+                    <h3>Project Summary</h3>
+                </div>
+                <div class="card-body">
+                    <p>
+                        The E-commerce platform demonstrates significant documentation drift primarily concentrated in API versioning inconsistencies and incomplete implementation of documented features. Critical discrepancies exist between the project-level specifications and actual service implementations, particularly regarding authentication tokens and API endpoint structures.
+                    </p>
+                </div>
+            </div>
+            
+            <h2>Component Analysis</h2>
+            <br>
+            
+            <div class="analysis-card">
+                <div class="card-header">
+                    <div class="progress-circle" style="--p:85"><span>85%</span></div>
+                    <h3>Product Service</h3>
+                </div>
+                <ul class="drift-list">
+                    <li class="drift-item">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+                        </span>
+                        The inline comment at line 5 incorrectly states "Connects to the MySQL database" when the implementation uses PostgreSQL via psycopg2.
+                    </li>
+                    <li class="drift-item">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+                        </span>
+                        API documentation describes pagination support with `page` and `limit` parameters, but the implementation completely ignores these query parameters in the database queries.
+                    </li>
+                    <li class="drift-item">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+                        </span>
+                        The `/products` endpoint lacks the required `/api/v1/` prefix specified in project-level documentation, exposing endpoints at root level instead.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="analysis-card">
+                 <div class="card-header">
+                    <div class="progress-circle" style="--p:95"><span>95%</span></div>
+                    <h3>Payment Service</h3>
+                </div>
+                <ul class="drift-list">
+                     <li class="drift-item">
+                        <span class="icon">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+                        </span>
+                        Component-level documentation is missing entirely, creating drift with project-level documentation that lists payment processing as a core feature.
+                    </li>
+                     <li class="drift-item">
+                        <span class="icon">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+                        </span>
+                        The inline comment at line 47 claims "This setup is fully compliant with all known documentation" but no component-level API specification exists to validate compliance.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="analysis-card">
+                 <div class="card-header">
+                    <div class="progress-circle mid-match" style="--p:70"><span>70%</span></div>
+                    <h3>Order Service</h3>
+                </div>
+                <ul class="drift-list">
+                     <li class="drift-item">
+                        <span class="icon">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+                        </span>
+                        The `POST /orders` endpoint is implemented as `POST /api/v1/orders/` (with trailing slash) but component documentation specifies `POST /orders` without the API versioning prefix.
+                    </li>
+                     <li class="drift-item">
+                        <span class="icon">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+                        </span>
+                        Component documentation shows request body using `items` array, but the implementation expects `CreateOrderRequest` with `getItems()` method structure.
+                    </li>
+                    <li class="drift-item">
+                        <span class="icon">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+                        </span>
+                        API documentation indicates the endpoint should check inventory with product-service before order creation, but the implementation shows no such validation logic in the `createNewOrder` method.
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="analysis-card">
+                 <div class="card-header">
+                    <div class="progress-circle" style="--p:88"><span>88%</span></div>
+                    <h3>Notification Service</h3>
+                </div>
+                <ul class="drift-list">
+                     <li class="drift-item">
+                        <span class="icon">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+                        </span>
+                        Inline comment at line 12 claims the logging format "is compliant with the coding standards" but uses ISO format instead of the documented organization standard format.
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="analysis-card">
+                 <div class="card-header">
+                    <div class="progress-circle low-match" style="--p:45"><span>45%</span></div>
+                    <h3>User Service</h3>
+                </div>
+                <ul class="drift-list">
+                     <li class="drift-item">
+                        <span class="icon">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+                        </span>
+                        <b>Critical drift:</b> project-level documentation mandates JWT login response must include both `accessToken` and `refreshToken`, but implementation only returns `accessToken`.
+                    </li>
+                     <li class="drift-item">
+                        <span class="icon">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+                        </span>
+                        The `generateMockJwt` function comment describes returning "a base64 encoded mock JWT string" but the implementation returns a plain concatenated string without base64 encoding.
+                    </li>
+                </ul>
+            </div>
+
+
+        </div>
+    </main>
+</body>
+</html>
