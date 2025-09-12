@@ -1,31 +1,27 @@
 ### Project Summary
 
-The e-commerce platform suffers from significant drift between implementation and documentation across multiple levels, including incorrect database specifications, authentication mechanism discrepancies, and misaligned service communication patterns. Cross-component drift is present where services reference incorrect endpoints and authentication methods that don't match the actual implementations.
+The analysis identified significant documentation drift across multiple service components, with the most prevalent issues being incorrect database technology references, authentication token expiry mismatches, and outdated payment integration specifications. Cross-component communication patterns described in documentation frequently contradict the actual implementation logic, creating potential integration failures.
+
+#### Cross-Component Drift Summary
+Critical cross-component drift exists where the **Order Service** incorrectly attempts to notify the **User Service** instead of the **Notification Service**, and the **User Service** implements 3-hour JWT token expiry while project documentation specifies 2-hour expiry across all services.
 
 ***
 
 ### Component Analysis
 
 **User Service**
+- The component specification incorrectly states that JWT tokens use "RSA-256 signature" when the implementation uses HS256 (HMAC with SHA-256)
+- Project documentation specifies 2-hour JWT token expiry, but the implementation generates tokens with 3-hour expiry
+- The UserService.java file contains an inline comment stating "Check if email already exists in MySQL database" when the actual database technology is PostgreSQL as specified in project documentation
+- Component documentation claims Redis caching TTL is 30 minutes, but the implementation sets cache expiry to 45 minutes (2700 seconds)
 
-* The project documentation specifies JWT tokens with 2-hour expiry, but the UserService implementation generates tokens with 3-hour expiry (180 minutes vs 120 minutes specified).
-* Component documentation states authentication uses "RSA-256 signature" for JWT tokens, but the implementation uses HS256 (HMAC-SHA256) algorithm instead.
-* The UserService implementation connects to a "MySQL database" according to an inline comment, but both project and component documentation specify PostgreSQL as the primary database.
-* Component documentation specifies Redis caching for user profiles with 30-minute TTL, but the implementation sets cache expiry to 2700 seconds (45 minutes).
-* The UserController returns "JWT token with 3-hour expiry" according to API documentation, contradicting the project-level specification of 2-hour tokens.
-
-**Order Service**
-
-* Project documentation states order data is "persisted in MongoDB with Redis session storage," but the component documentation specifies "Redis for cart session management and caching" - the implementation shows cart management but the project docs incorrectly describe it as session storage.
-* Component documentation lists PayPal as a payment integration option, but the order service implementation only includes Stripe payment processing.
-* The order handler's `notifyUserService` function incorrectly sends notifications to the user service endpoint instead of the notification service as described in the project architecture.
-* Component documentation specifies five order states including CANCELLED, but the implementation in `UpdateOrderStatus` only validates transitions between PENDING, PAID, SHIPPED, and DELIVERED states.
-* An inline comment in the order handler incorrectly states the method "should actually call the notification service, not user service" while the implementation attempts to call the user service.
+**Order Service** 
+- The project documentation states orders are stored in MongoDB, but component documentation incorrectly claims "Primary storage in MongoDB for order documents" while the service connects to "ecommerce" database without explicit MongoDB configuration verification
+- Component documentation mentions "PayPal integration for alternative payment methods" but no PayPal payment processing logic exists in the implementation
+- The order handler contains a comment "This should actually call the notification service, not user service" with an incorrect URL "http://localhost:8080/api/users/notifications" that attempts to notify the user service instead of the notification service
+- An inline comment incorrectly describes the `notifyUserService` method as calling the user service when it should call the notification service for order events
 
 **Notification Service**
-
-* Component documentation states the service uses "AWS SES" for email notifications, but the email client implementation uses a generic "HTTP email service" with configurable endpoints instead of AWS SES specifically.
-* The project documentation describes "push notifications for mobile applications" as a feature, but the notification service implementation only includes email and SMS functionality with no push notification support.
-* Component documentation specifies "WebSocket connections" for in-app notifications, but the implementation shows no WebSocket functionality.
-* The SMS client implementation includes "Twilio" integration as documented, but the email client does not implement the specified AWS SES integration.
-* Component documentation claims "100 emails per minute per user" rate limiting, but the email client implementation shows no rate limiting functionality.
+- Component documentation states email rate limiting is "100 emails per minute per user" but no rate limiting implementation exists in the email client code
+- The component specification mentions "Push notifications for mobile applications" but the SMS and email client implementations do not include any push notification functionality
+- Component documentation claims "WebSocket connections" for in-app notifications, but the notification service implementation only includes HTTP-based email and SMS functionality
