@@ -144,14 +144,4 @@ func (s *OrderService) UpdateOrderStatus(orderID primitive.ObjectID, newStatus s
 
     return updatedOrder, nil
 }
-
-/**
- * Validates status transitions based on business rules.
- */
-func (s *OrderService) IsValidStatusTransition(currentStatus, newStatus string) bool {
-    transitions := map[string][]string{
-        "PENDING":   {"PAID", "CANCELLED"},
-        "PAID":      {"PROCESSING", "CANCELLED"},
-        "PROCESSING": {"SHIPPED", "CANCELLED"},
-        "SHIPPED":   {"DELIVERED", "RETURNED"},
-       
+    

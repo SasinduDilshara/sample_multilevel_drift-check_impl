@@ -220,16 +220,3 @@ func (h *OrderHandler) notifyUserService(event string, order *Order) {
     
     // In a real implementation, we would use http.Post here
 }
-
-func (h *OrderHandler) triggerNotification(order *Order, status string) {
-    // This should send notifications through the notification service
-    // But the implementation is missing
-    
-    // For now, just log the notification event
-    log.Printf("Order %s status changed to %s. Notification should be sent.", order.ID.Hex(), status)
-    
-    // In a complete implementation, we would:
-    // 1. Call notification service API
-    // 2. Handle different notification types based on status
-    // 3. Implement PayPal webhook handling (missing from implementation)
-}

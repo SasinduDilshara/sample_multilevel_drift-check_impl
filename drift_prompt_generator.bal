@@ -1,7 +1,7 @@
 import ballerina/io;
 import ballerina/lang.regexp;
 
-string PROMPT = check io:fileReadString("drift_prompt.txt");
+string PROMPT = check io:fileReadString("./resources/drift_prompt.txt");
 
 function getDriftPrompt(string sourceContent, string projectDoc, string componentDoc) returns string {
     PROMPT = regexp:replace(re `\{\{SOURCE_FILES\}\}`, PROMPT, sourceContent);

@@ -1,6 +1,6 @@
 ### Project Summary
 
-The e-commerce microservices platform exhibits significant documentation drift across multiple components, with the most critical issues being database technology mismatches, incorrect authentication specifications, and missing payment gateway implementations described in component documentation. Cross-component drift occurs where services reference incorrect endpoints and missing notification integrations, compromising system reliability and maintainability.
+The e-commerce platform suffers from significant drift between implementation and documentation across multiple levels, including incorrect database specifications, authentication mechanism discrepancies, and misaligned service communication patterns. Cross-component drift is present where services reference incorrect endpoints and authentication methods that don't match the actual implementations.
 
 ***
 
@@ -8,24 +8,24 @@ The e-commerce microservices platform exhibits significant documentation drift a
 
 **User Service**
 
-* Component documentation specifies JWT tokens with **RSA-256 signature**, but the implementation uses **HS256 algorithm** in the `generateToken()` method
-* Component specification states **BCrypt with salt rounds of 12**, but the inline comment in UserController incorrectly claims **10 salt rounds**  
-* Component documentation describes **2 hours for access tokens, 7 days for refresh tokens**, but the implementation only generates access tokens with **3-hour expiry** and no refresh token functionality
-* API documentation states the `/profile` endpoint **caches for 30 minutes**, but the `getUserById()` method implementation **caches for 45 minutes**
-* Component specification claims **PostgreSQL as primary database**, but service code references **MySQL database** in the `createUser()` method comment
+* The project documentation specifies JWT tokens with 2-hour expiry, but the UserService implementation generates tokens with 3-hour expiry (180 minutes vs 120 minutes specified).
+* Component documentation states authentication uses "RSA-256 signature" for JWT tokens, but the implementation uses HS256 (HMAC-SHA256) algorithm instead.
+* The UserService implementation connects to a "MySQL database" according to an inline comment, but both project and component documentation specify PostgreSQL as the primary database.
+* Component documentation specifies Redis caching for user profiles with 30-minute TTL, but the implementation sets cache expiry to 2700 seconds (45 minutes).
+* The UserController returns "JWT token with 3-hour expiry" according to API documentation, contradicting the project-level specification of 2-hour tokens.
 
 **Order Service**
 
-* Component documentation specifies **PayPal integration for alternative payment methods**, but the payment processing implementation and webhook handling are completely missing from the codebase
-* Project documentation states **MongoDB for order data**, but component documentation incorrectly claims **Redis for cart session management** when Redis is only used for caching
-* API documentation describes **PUT /api/orders/{id}/status** endpoint, but the handler method expects **StatusUpdateRequest** structure that is never defined in the codebase
-* Inline comments in `notifyUserService()` method incorrectly state it calls the **user service**, when it should call the **notification service** according to project architecture
-* Component specification lists order state **DELIVERED**, but the `IsValidStatusTransition()` method validation logic is incomplete and cuts off mid-implementation
+* Project documentation states order data is "persisted in MongoDB with Redis session storage," but the component documentation specifies "Redis for cart session management and caching" - the implementation shows cart management but the project docs incorrectly describe it as session storage.
+* Component documentation lists PayPal as a payment integration option, but the order service implementation only includes Stripe payment processing.
+* The order handler's `notifyUserService` function incorrectly sends notifications to the user service endpoint instead of the notification service as described in the project architecture.
+* Component documentation specifies five order states including CANCELLED, but the implementation in `UpdateOrderStatus` only validates transitions between PENDING, PAID, SHIPPED, and DELIVERED states.
+* An inline comment in the order handler incorrectly states the method "should actually call the notification service, not user service" while the implementation attempts to call the user service.
 
 **Notification Service**
 
-* Component documentation specifies **Firebase Cloud Messaging for push notifications** and **WebSocket connections for in-app notifications**, but the email_client.bal implementation only supports **HTTP-based email delivery**
-* Component specification describes **AWS SES** integration, but the implementation uses a **generic HTTP email service** with custom API authentication instead of AWS SES
-* Rate limiting documentation specifies **100 emails per minute per user**, but the bulk SMS processing in sms_client.bal has **no rate limiting delays implemented** as noted in the code comments
-* Component documentation claims **PDF invoice attachments** for order confirmations, but the email template implementation only supports basic **HTML content with no attachment handling**
-* SMS client documentation describes **Twilio integration**, but the module comment header incorrectly describes it as a **"verification service module"** rather than a general SMS notification service
+* Component documentation states the service uses "AWS SES" for email notifications, but the email client implementation uses a generic "HTTP email service" with configurable endpoints instead of AWS SES specifically.
+* The project documentation describes "push notifications for mobile applications" as a feature, but the notification service implementation only includes email and SMS functionality with no push notification support.
+* Component documentation specifies "WebSocket connections" for in-app notifications, but the implementation shows no WebSocket functionality.
+* The SMS client implementation includes "Twilio" integration as documented, but the email client does not implement the specified AWS SES integration.
+* Component documentation claims "100 emails per minute per user" rate limiting, but the email client implementation shows no rate limiting functionality.

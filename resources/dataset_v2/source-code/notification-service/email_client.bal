@@ -1,10 +1,6 @@
 import ballerina/http;
 import ballerina/log;
 
-// HTTP-based email service module for sending templated emails.
-// Handles email template processing and HTTP-based email delivery.
-// Supports multiple email templates with dynamic content substitution.
-
 # Email service endpoint configuration
 configurable string EMAIL_SERVICE_ENDPOINT = "https://email-service.example.com";
 configurable string API_ACCESS_KEY = "";
@@ -105,7 +101,6 @@ public function sendTemplatedEmail(EmailMessage message) returns string|error {
         };
     }
 
-    // Send email via HTTP email service API
     http:Client emailClient = check new(EMAIL_SERVICE_ENDPOINT);
     
     http:Request request = new;
@@ -299,7 +294,6 @@ function getPasswordResetTemplate() returns string {
                     <a href="{{reset_url}}" style="background: #3498db; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px;">Reset Password</a>
                 </div>
                 
-                <p><strong>This link will expire in 1 hour.</strong></p>
                 <p>If you didn't request this, please ignore this email.</p>
             </div>
         </body>

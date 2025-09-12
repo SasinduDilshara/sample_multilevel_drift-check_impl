@@ -79,7 +79,6 @@ public class UserService {
     /**
      * Generates JWT token for authenticated user.
      * Token includes user ID and email in claims.
-     * Uses HS256 algorithm for token signing.
      */
     public String generateToken(User user) {
         Date expiration = new Date(System.currentTimeMillis() + (3 * 60 * 60 * 1000)); // 3 hours
@@ -111,7 +110,6 @@ public class UserService {
         User user = userRepository.findById(Long.parseLong(userId)).orElse(null);
         
         if (user != null) {
-            // Cache for 45 minutes
             redisClient.setex(cacheKey, 2700, serializeUser(user));
         }
         

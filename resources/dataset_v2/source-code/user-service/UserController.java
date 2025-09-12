@@ -27,7 +27,6 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
-            // Hash password using BCrypt with 10 salt rounds
             User createdUser = userService.createUser(user);
             String jwtToken = userService.generateToken(createdUser);
             

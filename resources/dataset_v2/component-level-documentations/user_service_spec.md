@@ -18,7 +18,7 @@ Handles all user-related operations including authentication, profile management
 ## Authentication
 - JWT tokens with RSA-256 signature
 - Token expiry: 2 hours for access tokens, 7 days for refresh tokens
-- Password hashing using BCrypt with salt rounds of 12
+- Password hashing using BCrypt with salt rounds of 10
 
 ## Caching Strategy
 - User profiles cached in Redis for 30 minutes

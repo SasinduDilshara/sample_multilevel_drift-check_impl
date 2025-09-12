@@ -6,11 +6,9 @@ Handles multi-channel notification delivery including email, SMS, and push notif
 ## Supported Channels
 - Email notifications via AWS SES
 - SMS notifications via Twilio
-- Push notifications via Firebase Cloud Messaging
 - In-app notifications via WebSocket connections
 
 ## Message Templates
-- Order confirmation emails with PDF invoice attachments
 - Shipping notification emails with tracking links
 - SMS alerts for delivery updates
 - Push notifications for promotional offers
@@ -23,5 +21,3 @@ Handles multi-channel notification delivery including email, SMS, and push notif
 
 ## Rate Limiting
 - Email: 100 emails per minute per user
-- SMS: 10 messages per minute per user
-- Push: 50 notifications per minute per user
