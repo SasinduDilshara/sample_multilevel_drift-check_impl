@@ -1,11 +1,12 @@
 import ballerina/io;
 import ballerina/file;
 import ballerina/lang.regexp;
-const string DATA_ROOT = "/Users/admin/Desktop/multi-level-drift-check/multi-level-drift-check/dataset_gemini";
-const string ORG_DOCS_PATH = "/Users/admin/Desktop/multi-level-drift-check/multi-level-drift-check/dataset_gemini/org-level-documentations";
-const string PROJECT_DOCS_PATH = "/Users/admin/Desktop/multi-level-drift-check/multi-level-drift-check/dataset_gemini/project-level-documentations";
-const string COMPONENT_DOCS_PATH = "/Users/admin/Desktop/multi-level-drift-check/multi-level-drift-check/dataset_gemini/component-level-documentations";
-const string SOURCE_FILES_PATH = "/Users/admin/Desktop/multi-level-drift-check/multi-level-drift-check/dataset_gemini/source-code";
+
+const string DATA_ROOT = "./resources/dataset_v2";
+const string ORG_DOCS_PATH = "./resources/dataset_v2/org-level-documentations";
+const string PROJECT_DOCS_PATH = "./resources/dataset_v2/project-level-documentations";
+const string COMPONENT_DOCS_PATH = "./resources/dataset_v2/component-level-documentations";
+const string SOURCE_FILES_PATH = "./resources/dataset_v2/source-code";
 
 function readAllDocsFromDir(string dirPath) returns string|error {
     string content = "";
@@ -23,7 +24,6 @@ function readAllDocsFromDir(string dirPath) returns string|error {
     }
     return content;
 }
-
 
 function buildSourceFilesXml(string dirPath) returns string|error {
     string[] fileBlocks = [];

@@ -52,15 +52,31 @@ You will receive the project context in the following structure:
 
 ## **Analysis Process (Internal Steps)**
 
-(This section remains unchanged)
-
 ### **1. Context Analysis**
+
+* Parse and comprehend the **project-level documentation** (requirements, READMEs) to understand the project's goals and specifications.
+* Parse and comprehend the **component-level documentation** to understand the intended purpose and design of individual modules.
+* Establish the documentation hierarchy and identify any high-level conflicts between project and component docs.
+
 
 ### **2. Source Code Analysis**
 
+* For each source file, automatically detect the programming language and its specific documentation conventions (e.g., `/** */` vs. `"""`).
+* Identify all code entities (functions, classes, etc.) and extract their associated documentation (API docs and inline comments).
+
 ### **3. Multi-Level Drift Detection**
 
+* For each code entity, systematically compare its implementation against all relevant documentation layers to identify drift.
+  * **Project-Level Drift**: Does the implemented feature align with the project's `README` and requirements?
+  * **Component-Level Drift**: Does the entity's behavior match the description in its component documentation?
+  * **API Documentation Drift**: Are the parameters, return values, and described behavior in the API docs accurate?
+  * **Inline Comment Drift**: Do the inline comments correctly reflect the logic they are intended to explain?
+  * **Cross-Component Drift**: **Analyze interactions between different components as described in API documentation and inline comments.** For instance, if a comment in **Component A** states that it calls the `calculate_total()` function from **Component B** with two arguments, verify that this function exists in **Component B** and that its signature (name, parameters, return type) matches the description. Any mismatch is a cross-component drift.
+
+
 ### **4. Intelligent Categorization**
+
+* Internally categorize each detected issue by its **severity** (Critical, Major, Minor), **type** (Missing, Outdated, Incorrect, Conflicting), and the **documentation level** it occurred at. This categorization will inform the tone and focus of the final report.
 
 -----
 
@@ -85,6 +101,7 @@ Generate a comprehensive report in markdown format that is exclusively a list of
       * *Example: The project primarily suffers from drift where API documentation parameters are outdated following recent code refactoring, and inline comments do not accurately reflect updated business logic.*
   * The project summary **must not** exceed 2 sentences.
   * Conclude with a brief statement on the impact of these **drifts** and the recommended course of action.
+  * If a Cross-Component Drift occures, briefly mention that it in the main summary.
 
 ### **2. Detailed Component Analysis**
 
@@ -99,7 +116,8 @@ Generate a comprehensive report in markdown format that is exclusively a list of
       * ***DO NOT WRITE:*** *The `getUser` function is well-documented and matches the implementation.*
       * ***DO NOT WRITE:*** *The **send-confirmation** endpoint correctly implements the API versioning standard.*
 
-### **3. Tone and Style**
+
+### **4. Tone and Style**
 
   * Write in a professional, clear, and direct tone.
   * Use **bold formatting** to emphasize component names and key terms.

@@ -4,18 +4,17 @@ import ballerina/http;
 const string CLAUDE_API_URL = "https://api.anthropic.com/v1/messages";
 
 // Request payload for Claude API
-type ClaudeRequest record {
+type ClaudeRequest record {|
     string model;
     int max_tokens;
     Message[] messages;
-};
+|};
 
-type Message record {
+type Message record {|
     string role;
     string content;
-};
+|};
 
-// Response from Claude API
 type ClaudeResponse record {
     string id;
     string 'type;
